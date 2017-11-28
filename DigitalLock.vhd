@@ -12,31 +12,28 @@ port (
 	bent,bset,b1,b2 : in std_logic;  --button in
 	bo0,bo1 : buffer std_logic;  --button out
 	clk : in std_logic;  --clock
---	mem0,mem1,mem2,mem3 : buffer std_logic_vector(3 downto 0); --mem
    segment7_0,segment7_1,segment7_2,segment7_3 : out std_logic_vector(6 downto 0)); --Seven Segment Display
 
 end entity DigitalLock;
 ------------------------------------------------------------------------------------
 architecture Behavioral of DigitalLock is
 signal button : std_logic:='0';
-signal mem0 : std_logic_vector(3 downto 0) := (others =>'0');
-signal mem1 : std_logic_vector(3 downto 0) := (others =>'0');
-signal mem2 : std_logic_vector(3 downto 0) := (others =>'0');
-signal mem3 : std_logic_vector(3 downto 0) := (others =>'0');
+signal mem0 : std_logic_vector(3 downto 0);
+signal mem1 : std_logic_vector(3 downto 0);
+signal mem2 : std_logic_vector(3 downto 0);
+signal mem3 : std_logic_vector(3 downto 0);
 begin
 process(segment7_in0,segment7_in1,segment7_in2,segment7_in3,mem0,mem1,mem2,mem3,clk,button,bent,bset)
 variable oldbent : std_logic:='1';
 variable oldbset : std_logic:='1';
 variable cnt : std_logic_vector(19 downto 0);
 begin
-if ((sw1 and b1 and b2)='1') then --Factory Reset
-mem0 <= "0000";
-mem1 <= "0000";
-mem2 <= "0000";
-mem3 <= "0000";
-end if;
+mem0 <= "0100"; --4
+mem1 <= "1111"; --F
+mem2 <= "0110"; --6
+mem3 <= "1001"; --9
 ---------------------------------------------------------------------------------------
-if (clk'event and clk='1') then
+if (clk'event and clk='1') then --conditional if statement for enter button into a comparison between set password and input
 	if (bent and oldbent)='1' then
 			led <= '0';
 			cnt :=(others=>'0');
@@ -50,8 +47,8 @@ if (clk'event and clk='1') then
 	end if;
 	bo0 <=button;
 end if;
-
-	if ((bset and oldbset)='1') then
+-----------------------------------------------------------------------------------------
+	if ((bset and oldbset)='1') then  --conditional set button to set code
 		led1 <= '0';
 	elsif (led = '1') then
 		led1 <= '1';
