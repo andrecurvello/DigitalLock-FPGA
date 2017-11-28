@@ -26,7 +26,6 @@ begin
 process(segment7_in0,segment7_in1,segment7_in2,segment7_in3,mem0,mem1,mem2,mem3,clk,button,bent,bset)
 variable oldbent : std_logic:='1';
 variable oldbset : std_logic:='1';
-variable cnt : std_logic_vector(19 downto 0);
 begin
 mem0 <= "0100"; --4
 mem1 <= "1111"; --F
@@ -36,12 +35,10 @@ mem3 <= "1001"; --9
 if (clk'event and clk='1') then --conditional if statement for enter button into a comparison between set password and input
 	if (bent and oldbent)='1' then
 			led <= '0';
-			cnt :=(others=>'0');
 			oldbent := bent;
 		elsif ((mem0 = segment7_in0) and (mem1 = segment7_in1) and (mem2 = segment7_in2) and (mem3 = segment7_in3)) then
 			led <= '1';
-			cnt:=cnt+'1';
-		if ((cnt=x"F423F") and ((oldbent xor bent)='0')) then
+		if ((oldbent xor bent)='0') then
 				button <= oldbent;
 		end if;
 	end if;
